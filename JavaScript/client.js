@@ -1,5 +1,7 @@
 'use strict';
 
+const Session = require('./session.js');
+
 const UNIX_EPOCH = 'Thu, 01 Jan 1970 00:00:00 GMT';
 const COOKIE_EXPIRE = 'Fri, 01 Jan 2100 00:00:00 GMT';
 const COOKIE_DELETE = `=deleted; Expires=${UNIX_EPOCH}; Path=/; Domain=`;
@@ -21,6 +23,7 @@ class Client {
     this.cookie = {};
     this.preparedCookie = [];
     this.parseCookie();
+    Session.restore(this);
   }
 
   parseCookie() {

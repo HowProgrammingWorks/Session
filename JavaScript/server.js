@@ -11,7 +11,11 @@ const routing = {
     return `Session token is: ${client.token}`;
   },
   '/api/method1': async client => {
-    return { data: 'example result' };
+    if (client.session) {
+      return { data: 'example result' };
+    } else {
+      return { data: 'access is denied' };
+    }
   },
   '/api/method2': async client => ({
     url: client.req.url,
@@ -44,7 +48,11 @@ http.createServer((req, res) => {
         res.end(result);
       }, err => {
         console.error(err.stack);
+        res.statusCode = 500;
         res.end('Internal Server Error 500');
       });
+    return;
   }
+  res.statusCode = 404;
+  res.end('Not found 404');
 }).listen(8000);

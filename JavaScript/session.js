@@ -26,15 +26,7 @@ class Session extends Map {
   }
 
   static start(client) {
-    const { cookie } = client;
-    const sessionToken = cookie.token;
-    if (sessionToken) {
-      const session = sessions.get(sessionToken);
-      if (session) {
-        client.session = session;
-        return session;
-      }
-    }
+    if (client.session) return client.session;
     const token = generateToken();
     client.token = token;
     const session = new Session(token);
@@ -42,6 +34,20 @@ class Session extends Map {
     client.setCookie('token', token);
     sessions.set(token, session);
     return session;
+  }
+
+  static restore(client) {
+    const { cookie } = client;
+    const sessionToken = cookie.token;
+    console.log({ sessionToken });
+    if (sessionToken) {
+      const session = sessions.get(sessionToken);
+      if (session) {
+        client.token = sessionToken;
+        client.session = session;
+        return session;
+      }
+    }
   }
 
   static drop(client) {
