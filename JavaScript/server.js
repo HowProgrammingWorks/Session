@@ -28,6 +28,14 @@ const routing = {
     url: client.req.url,
     headers: client.req.headers,
   }),
+  '/api/method3': async client => {
+    if (client.session) {
+      return [...client.session.entries()].map(([key, value]) => {
+        return `<b>${key}</b>: ${value}<br>`;
+      }).join();
+    }
+    return 'No session found';
+  },
 };
 
 const types = {
@@ -37,11 +45,11 @@ const types = {
   undefined: () => 'not found',
 };
 
-http.createServer((req, res) => {
-  const client = new Client(req, res);
+http.createServer(async (req, res) => {
+  const client = await Client.getInstance(req, res);
   const { method, url, headers } = req;
   console.log(`${method} ${url} ${headers.cookie}`);
-  const handler = routing[req.url];
+  const handler = routing[url];
   res.on('finish', () => {
     if (client.session) client.session.save();
   });

@@ -23,7 +23,12 @@ class Client {
     this.cookie = {};
     this.preparedCookie = [];
     this.parseCookie();
-    Session.restore(this);
+  }
+
+  static async getInstance(req, res) {
+    const client = new Client(req, res);
+    await Session.restore(client);
+    return client;
   }
 
   parseCookie() {
@@ -53,7 +58,6 @@ class Client {
 
   sendCookie() {
     const { res, preparedCookie } = this;
-    //console.dir({ preparedCookie, headersSent: res.headersSent });
     if (preparedCookie.length && !res.headersSent) {
       console.dir({ preparedCookie });
       res.setHeader('Set-Cookie', preparedCookie);

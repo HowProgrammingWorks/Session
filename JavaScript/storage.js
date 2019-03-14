@@ -17,7 +17,7 @@ const safePath = fn => (token, ...args) => {
     callback(new Error('Invalid session token'));
     return;
   }
-  fn(fileName, ...args, callback);
+  fn(fileName, ...args);
 };
 
 const readSession = safePath(fs.readFile);
@@ -45,13 +45,16 @@ class Storage extends Map {
 
   save(key) {
     const value = super.get(key);
-    const data = v8.serialize(value);
-    if (value) writeSession(key, data, () => {
-      console.log(`Session saved: ${key}`);
-    });
+    if (value) {
+      const data = v8.serialize(value);
+      writeSession(key, data, () => {
+        console.log(`Session saved: ${key}`);
+      });
+    }
   }
 
   delete(key) {
+    console.log('Delete: ', key);
     deleteSession(key, () => {
       console.log(`Session deleted: ${key}`);
     });
