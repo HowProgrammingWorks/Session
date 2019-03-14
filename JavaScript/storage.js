@@ -8,6 +8,10 @@ const PATH = `${__dirname}/sessions`;
 
 const safePath = fn => (token, ...args) => {
   const callback = args[args.length - 1];
+  if (typeof token !== 'string') {
+    callback(new Error('Invalid session token'));
+    return;
+  }
   const fileName = path.join(PATH, token);
   if (!fileName.startsWith(PATH)) {
     callback(new Error('Invalid session token'));

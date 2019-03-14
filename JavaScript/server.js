@@ -11,6 +11,11 @@ const routing = {
     Session.start(client);
     return `Session token is: ${client.token}`;
   },
+  '/destroy': async client => {
+    const result = `Session destroyed: ${client.token}`;
+    Session.delete(client);
+    return result;
+  },
   '/api/method1': async client => {
     if (client.session) {
       client.session.set('method1', 'called');

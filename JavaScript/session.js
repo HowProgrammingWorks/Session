@@ -50,13 +50,14 @@ class Session extends Map {
     }
   }
 
-  static drop(client) {
+  static delete(client) {
     const { token } = client;
     if (token) {
       storage.delete(token);
       client.deleteCookie('token');
       client.token = undefined;
       client.session = null;
+      storage.delete(this.token);
     }
   }
 
