@@ -53,7 +53,7 @@ class Client {
 
   sendCookie() {
     const { res, preparedCookie } = this;
-    console.dir({ preparedCookie, headersSent: res.headersSent });
+    //console.dir({ preparedCookie, headersSent: res.headersSent });
     if (preparedCookie.length && !res.headersSent) {
       console.dir({ preparedCookie });
       res.setHeader('Set-Cookie', preparedCookie);

@@ -1,6 +1,7 @@
 'use strict';
 
 const http = require('http');
+
 const Client = require('./client.js');
 const Session = require('./session.js');
 
@@ -12,6 +13,7 @@ const routing = {
   },
   '/api/method1': async client => {
     if (client.session) {
+      client.session.set('method1', 'called');
       return { data: 'example result' };
     } else {
       return { data: 'access is denied' };
@@ -32,12 +34,12 @@ const types = {
 
 http.createServer((req, res) => {
   const client = new Client(req, res);
-  console.dir({
-    url: req.url,
-    status: res.statusCode,
-    cookie: client.cookie,
-  });
+  const { method, url, headers } = req;
+  console.log(`${method} ${url} ${headers.cookie}`);
   const handler = routing[req.url];
+  res.on('finish', () => {
+    if (client.session) client.session.save();
+  });
   if (handler) {
     handler(client)
       .then(data => {
@@ -47,7 +49,6 @@ http.createServer((req, res) => {
         client.sendCookie();
         res.end(result);
       }, err => {
-        console.error(err.stack);
         res.statusCode = 500;
         res.end('Internal Server Error 500');
       });

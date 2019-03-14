@@ -1,8 +1,8 @@
 'use strict';
 
-const sessions = new Map();
+const storage = require('./storage.js');
 
-const TOKEN_LENGTH = 100;
+const TOKEN_LENGTH = 32;
 const ALPHA_UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const ALPHA_LOWER = 'abcdefghijklmnopqrstuvwxyz';
 const ALPHA = ALPHA_UPPER + ALPHA_LOWER;
@@ -32,32 +32,36 @@ class Session extends Map {
     const session = new Session(token);
     client.session = session;
     client.setCookie('token', token);
-    sessions.set(token, session);
+    storage.set(token, session);
     return session;
   }
 
   static restore(client) {
     const { cookie } = client;
     const sessionToken = cookie.token;
-    console.log({ sessionToken });
     if (sessionToken) {
-      const session = sessions.get(sessionToken);
-      if (session) {
-        client.token = sessionToken;
-        client.session = session;
-        return session;
-      }
+      storage.get(sessionToken, (err, session) => {
+        if (session) {
+          Object.setPrototypeOf(session, Session.prototype);
+          client.token = sessionToken;
+          client.session = session;
+        }
+      });
     }
   }
 
   static drop(client) {
     const { token } = client;
     if (token) {
-      sessions.delete(token);
+      storage.delete(token);
       client.deleteCookie('token');
       client.token = undefined;
       client.session = null;
     }
+  }
+
+  save() {
+    storage.save(this.token);
   }
 }
 
