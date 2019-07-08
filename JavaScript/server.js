@@ -6,7 +6,7 @@ const Client = require('./client.js');
 const Session = require('./session.js');
 
 const routing = {
-  '/': async client => '<h1>welcome to homepage</h1><hr>',
+  '/': async () => '<h1>welcome to homepage</h1><hr>',
   '/start': async client => {
     Session.start(client);
     return `Session token is: ${client.token}`;
@@ -30,9 +30,9 @@ const routing = {
   }),
   '/api/method3': async client => {
     if (client.session) {
-      return [...client.session.entries()].map(([key, value]) => {
-        return `<b>${key}</b>: ${value}<br>`;
-      }).join();
+      return [...client.session.entries()]
+        .map(([key, value]) => `<b>${key}</b>: ${value}<br>`)
+        .join();
     }
     return 'No session found';
   },
@@ -64,6 +64,7 @@ http.createServer(async (req, res) => {
       }, err => {
         res.statusCode = 500;
         res.end('Internal Server Error 500');
+        console.log(err);
       });
     return;
   }
