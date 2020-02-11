@@ -263,6 +263,9 @@
     "template-curly-spacing": [
       "error",
       "never"
+    ],
+    "require-atomic-updates": [
+      "off"
     ]
   }
 }
