@@ -43,7 +43,10 @@ class Session extends Map {
     if (sessionToken) {
       return new Promise((resolve, reject) => {
         storage.get(sessionToken, (err, session) => {
-          if (err) reject(new Error('No session'));
+          if (err) {
+            reject(new Error('No session'));
+            return;
+          }
           Object.setPrototypeOf(session, Session.prototype);
           client.token = sessionToken;
           client.session = session;
