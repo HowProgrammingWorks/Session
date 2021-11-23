@@ -213,7 +213,7 @@
     ],
     "arrow-parens": [
       "error",
-      "as-needed"
+      "always"
     ],
     "arrow-body-style": [
       "error",
@@ -263,9 +263,6 @@
     "template-curly-spacing": [
       "error",
       "never"
-    ],
-    "require-atomic-updates": [
-      "off"
     ]
   }
 }
