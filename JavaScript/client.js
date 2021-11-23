@@ -6,7 +6,7 @@ const UNIX_EPOCH = 'Thu, 01 Jan 1970 00:00:00 GMT';
 const COOKIE_EXPIRE = 'Fri, 01 Jan 2100 00:00:00 GMT';
 const COOKIE_DELETE = `=deleted; Expires=${UNIX_EPOCH}; Path=/; Domain=`;
 
-const parseHost = host => {
+const parseHost = (host) => {
   if (!host) return 'no-host-name-in-http-headers';
   const portOffset = host.indexOf(':');
   if (portOffset > -1) host = host.substr(0, portOffset);
