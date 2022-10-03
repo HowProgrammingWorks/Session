@@ -1,8 +1,8 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const v8 = require('v8');
+const fs = require('node:fs');
+const path = require('node:path');
+const v8 = require('node:v8');
 
 const PATH = `${__dirname}/sessions`;
 

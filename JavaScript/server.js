@@ -1,6 +1,6 @@
 'use strict';
 
-const http = require('http');
+const http = require('node:http');
 
 const Client = require('./client.js');
 const Session = require('./session.js');
