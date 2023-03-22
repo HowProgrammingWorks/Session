@@ -40,14 +40,13 @@ class Session extends Map {
     const { cookie } = client;
     if (!cookie) return;
     const sessionToken = cookie.token;
-    if (sessionToken) {
-      const session = await storage.get(sessionToken);
-      if (!session) return;
-      Object.setPrototypeOf(session, Session.prototype);
-      client.token = sessionToken;
-      client.session = session;
-      return session;
-    }
+    if (!sessionToken) return;
+    const session = await storage.get(sessionToken);
+    if (!session) return;
+    Object.setPrototypeOf(session, Session.prototype);
+    client.token = sessionToken;
+    client.session = session;
+    return session;
   }
 
   static delete(client) {
