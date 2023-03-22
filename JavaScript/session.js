@@ -36,20 +36,17 @@ class Session extends Map {
     return session;
   }
 
-  static restore(client) {
+  static async restore(client) {
     const { cookie } = client;
     if (!cookie) return;
     const sessionToken = cookie.token;
     if (sessionToken) {
-      return new Promise((resolve, reject) => {
-        storage.get(sessionToken, (err, session) => {
-          if (err) reject(new Error('No session'));
-          Object.setPrototypeOf(session, Session.prototype);
-          client.token = sessionToken;
-          client.session = session;
-          resolve(session);
-        });
-      });
+      const session = await storage.get(sessionToken);
+      if (!session) return;
+      Object.setPrototypeOf(session, Session.prototype);
+      client.token = sessionToken;
+      client.session = session;
+      return session;
     }
   }
 
