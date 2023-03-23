@@ -5,6 +5,8 @@ const http = require('node:http');
 const Client = require('./client.js');
 const Session = require('./session.js');
 
+const INVALID_TOKEN_CODE = 498;
+
 const routing = {
   '/': async () => '<h1>welcome to homepage</h1><hr>',
   '/start': async (client) => {
@@ -46,7 +48,13 @@ const types = {
 };
 
 http.createServer(async (req, res) => {
-  const client = await Client.getInstance(req, res);
+  try {
+    const client = await Client.getInstance(req, res);
+  } catch {
+    res.statusCode = INVALID_TOKEN_CODE;
+    res.end();
+    return;
+  }
   const { method, url, headers } = req;
   console.log(`${method} ${url} ${headers.cookie}`);
   const handler = routing[url];
